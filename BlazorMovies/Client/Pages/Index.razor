@@ -1,7 +1,28 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<div>
+    <h3>Movie</h3>
+    <MoviesList Movies="movies">
+        <NullTemplate>
+            <span style="color: red">This is loading...</span>
+        </NullTemplate>
+        <EmptyTemplate>
+            <span style="color: blue">No records to see...</span>
+        </EmptyTemplate>
+    </MoviesList>
+</div>
 
-Welcome to your new app.
+@code {
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    private List<Movie> movies;
+
+    protected override void OnInitialized()
+    {
+        movies = new List<Movie>()
+        {
+            new Movie(){Title = "Spider-Man: Far From Home", ReleaseDate = new DateTime(2019, 7, 2)},
+            new Movie(){Title = "The Shining", ReleaseDate = new DateTime(1980, 10, 30)},
+            new Movie(){Title = "Inception", ReleaseDate = new DateTime(2010, 7, 16 )}
+        };
+    }
+}

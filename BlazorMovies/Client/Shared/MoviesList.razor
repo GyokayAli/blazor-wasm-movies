@@ -1,0 +1,54 @@
+﻿@if (Movies == null)
+{
+    @if (NullTemplate != null)
+    {
+        @NullTemplate
+    }
+    else
+    {
+        // Default content
+        <img src="https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" />
+    }
+}
+else if (Movies.Count == 0)
+{
+    @if (EmptyTemplate != null)
+    {
+        @EmptyTemplate
+    }
+    else
+    {
+        // Default content
+        <text>There are no records to show</text>
+    }
+}
+else
+{
+    <input type="checkbox" @bind="displayButtons" />
+
+    foreach (var movie in Movies)
+    {
+        <SingleMovie Movie="movie"
+                     DisplayButtons="displayButtons"
+                     DeleteMovie="DeleteMovie" />
+    }
+}
+
+@code {
+
+    private bool displayButtons = true;
+
+    [Parameter]
+    public List<Movie> Movies { get; set; }
+
+    [Parameter]
+    public RenderFragment NullTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment EmptyTemplate { get; set; }
+
+    private void DeleteMovie(Movie movie)
+    {
+        Movies.Remove(movie);
+    }
+}
