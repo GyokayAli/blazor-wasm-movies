@@ -1,38 +1,14 @@
-﻿@if (Movies == null)
-{
-    @if (NullTemplate != null)
-    {
-        @NullTemplate
-    }
-    else
-    {
-        // Default content
-        <img src="https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" />
-    }
-}
-else if (Movies.Count == 0)
-{
-    @if (EmptyTemplate != null)
-    {
-        @EmptyTemplate
-    }
-    else
-    {
-        // Default content
-        <text>There are no records to show</text>
-    }
-}
-else
-{
-    <input type="checkbox" @bind="displayButtons" />
+﻿@inject IJSRuntime js
 
-    foreach (var movie in Movies)
-    {
+<input type="checkbox" @bind="displayButtons" />
+
+<GenericList List="Movies">
+    <ElementTemplate Context="movie">
         <SingleMovie Movie="movie"
                      DisplayButtons="displayButtons"
                      DeleteMovie="DeleteMovie" />
-    }
-}
+    </ElementTemplate>
+</GenericList>
 
 @code {
 
@@ -41,14 +17,14 @@ else
     [Parameter]
     public List<Movie> Movies { get; set; }
 
-    [Parameter]
-    public RenderFragment NullTemplate { get; set; }
-
-    [Parameter]
-    public RenderFragment EmptyTemplate { get; set; }
-
-    private void DeleteMovie(Movie movie)
+    private async Task DeleteMovie(Movie movie)
     {
-        Movies.Remove(movie);
+        await js.MyFunction("custom message");
+        var confirmed = await js.Confirm($"Are you sure you want to delete {movie.Title}?");
+
+        if (confirmed)
+        {
+            Movies.Remove(movie);
+        }
     }
 }

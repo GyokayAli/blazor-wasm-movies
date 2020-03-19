@@ -2,15 +2,10 @@
 
 <div>
     <h3>Movie</h3>
-    <MoviesList Movies="movies">
-        <NullTemplate>
-            <span style="color: red">This is loading...</span>
-        </NullTemplate>
-        <EmptyTemplate>
-            <span style="color: blue">No records to see...</span>
-        </EmptyTemplate>
-    </MoviesList>
+    <MoviesList Movies="movies" />
 </div>
+
+<button @onclick="AddNewMovie">Add new movie</button>
 
 @code {
 
@@ -24,5 +19,10 @@
             new Movie(){Title = "The Shining", ReleaseDate = new DateTime(1980, 10, 30)},
             new Movie(){Title = "Inception", ReleaseDate = new DateTime(2010, 7, 16 )}
         };
+    }
+
+    public void AddNewMovie()
+    {
+        movies.Add(new Movie() { Title = "Movie Sample", ReleaseDate = DateTime.Today });
     }
 }

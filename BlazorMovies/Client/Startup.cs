@@ -7,6 +7,7 @@ namespace BlazorMovies.Client
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
         }
 
         public void Configure(IComponentsApplicationBuilder app)
