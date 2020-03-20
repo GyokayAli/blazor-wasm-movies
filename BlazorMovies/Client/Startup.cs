@@ -1,3 +1,4 @@
+using BlazorMovies.Client.Helpers;
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +9,7 @@ namespace BlazorMovies.Client
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
+            services.AddTransient<IRepository, RepositoryInMemory>();
         }
 
         public void Configure(IComponentsApplicationBuilder app)
