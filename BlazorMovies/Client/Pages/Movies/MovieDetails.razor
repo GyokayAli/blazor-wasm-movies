@@ -1,0 +1,16 @@
+﻿@page  "/movie/{MovieId:int}"
+@page  "/movie/{MovieId:int}/{MovieName}"
+
+@code {
+
+    [Parameter]
+    public int MovieId { get; set; }
+
+    [Parameter]
+    public string MovieName { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine(MovieId);
+    }
+}
