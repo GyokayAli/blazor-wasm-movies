@@ -1,5 +1,4 @@
-﻿
-<EditForm Model="Movie" OnValidSubmit="OnValidSubmit">
+﻿<EditForm Model="Movie" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="form-group">
         <label>Title:</label>
@@ -39,12 +38,21 @@
                        For="@(() => Movie.Summary)" />
     </div>
 
+    <div class="form-group">
+        <label>Genres:</label>
+        <div>
+            <MultipleSelector Selected="Selected" NotSelected="NotSelected" />
+        </div>
+    </div>
+
     <button type="submit" class="btn btn-primary">Save Changes</button>
 </EditForm>
 
 @code {
 
     private string imageURL;
+    private List<MultipleSelectorModel> Selected = new List<MultipleSelectorModel>();
+    private List<MultipleSelectorModel> NotSelected = new List<MultipleSelectorModel>();
 
     [Parameter]
     public Movie Movie { get; set; }
@@ -52,8 +60,17 @@
     [Parameter]
     public EventCallback OnValidSubmit { get; set; }
 
+    [Parameter]
+    public List<Genre> SelectedGenres { get; set; } = new List<Genre>();
+
+    [Parameter]
+    public List<Genre> NotSelectedGenres { get; set; } = new List<Genre>();
+
     protected override void OnInitialized()
     {
+        Selected = SelectedGenres.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
+        NotSelected = NotSelectedGenres.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
+
         if (!string.IsNullOrEmpty(Movie.Poster))
         {
             imageURL = Movie.Poster;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BlazorMovies.Shared.Entities
@@ -14,6 +15,7 @@ namespace BlazorMovies.Shared.Entities
         [Required]
         public DateTime? ReleaseDate { get; set; }
         public string Poster { get; set; }
+        public List<MoviesGenres> MoviesGenres { get; set; }
         public string TitleBrief
         {
             get
@@ -32,6 +34,11 @@ namespace BlazorMovies.Shared.Entities
                     return Title;
                 }
             }
+        }
+
+        public Movie()
+        {
+            MoviesGenres = new List<MoviesGenres>();
         }
     }
 }

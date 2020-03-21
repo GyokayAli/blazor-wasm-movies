@@ -2,11 +2,28 @@
 
 <h3>Edit Movie</h3>
 
-<MovieForm Movie="Movie" OnValidSubmit="Edit" />
+@if (Movie != null)
+{
+    <MovieForm Movie="Movie" OnValidSubmit="Edit" 
+               NotSelectedGenres="NotSelectedGenres"
+               SelectedGenres="SelectedGenres" />
+}
 
 @code {
 
     private Movie Movie = new Movie();
+
+    private List<Genre> NotSelectedGenres = new List<Genre>()
+{
+        new Genre() { Id = 1, Name = "Action" },
+        new Genre() { Id = 2, Name = "Comedy" },
+        new Genre() { Id = 3, Name = "Horror" }
+    };
+
+    private List<Genre> SelectedGenres = new List<Genre>()
+{
+        new Genre() { Id = 4, Name = "Romantic" }
+    };
 
     [Parameter]
     public int MovieId { get; set; }
