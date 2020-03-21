@@ -1,13 +1,17 @@
 ﻿@page "/movies/create"
 @inject NavigationManager navigationManager
 
-<button class="btn btn-primary" @onclick="SaveMovie">Save Movie</button>
+<h3>Create Movie</h3>
+
+<MovieForm Movie="Movie" OnValidSubmit="SaveMovie" />
 
 @code {
+
+    private Movie Movie = new Movie();
 
     private void SaveMovie()
     {
         // Saving movie...
-        navigationManager.NavigateTo("movie");
+        Console.WriteLine("Create movie");
     }
 }
