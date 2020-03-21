@@ -1,3 +1,4 @@
+using Blazor.FileReader;
 using BlazorMovies.Client.Helpers;
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ namespace BlazorMovies.Client
         {
             services.AddOptions();
             services.AddTransient<IRepository, RepositoryInMemory>();
+            services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
         }
 
         public void Configure(IComponentsApplicationBuilder app)
