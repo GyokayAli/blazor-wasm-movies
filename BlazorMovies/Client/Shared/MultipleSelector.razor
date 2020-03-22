@@ -1,5 +1,5 @@
 ﻿<div class="multiple-selector">
-    <ul class="selectable-ui">
+    <ul class="selectable-ul">
         @foreach (var item in NotSelected)
         {
             <li @onclick="@(() => Select(item))">@item.Value</li>
@@ -9,7 +9,7 @@
         <button type="button" @onclick="SelectAll">>></button>
         <button type="button" @onclick="DeselectAll">@removeAllText</button>
     </div>
-    <ul class="selectable-ui">
+    <ul class="selectable-ul">
         @foreach (var item in Selected)
         {
             <li @onclick="@(() => Deselect(item))">@item.Value</li>
