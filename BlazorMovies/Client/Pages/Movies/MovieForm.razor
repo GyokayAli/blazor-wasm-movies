@@ -34,7 +34,7 @@
 
     <div class="form-group form-markdown">
         <InputMarkdown @bind-Value="Movie.Summary"
-                       Label="Biography"
+                       Label="Summary"
                        For="@(() => Movie.Summary)" />
     </div>
 
@@ -49,14 +49,14 @@
         <label>Actors:</label>
         <div>
             <MultipleSelectorTypeahead Context="person"
-                                       SearchMethod="SearchMethod" 
+                                       SearchMethod="SearchMethod"
                                        SelectedElements="SelectedActors">
                 <MyResultTemplate>
                     <img src="@person.Picture" style="width: 50px;" />
                     @person.Name
                 </MyResultTemplate>
                 <MyListTemplate>
-                    @person.Name
+                    @person.Name / <input type="text" placeholder="Character" @bind="person.Character" />
                 </MyListTemplate>
             </MultipleSelectorTypeahead>
         </div>
@@ -82,7 +82,7 @@
 
     [Parameter]
     public List<Genre> NotSelectedGenres { get; set; } = new List<Genre>();
-   
+
     [Parameter]
     public List<Person> SelectedActors { get; set; } = new List<Person>();
 
@@ -107,9 +107,22 @@
 
     private async Task<IEnumerable<Person>> SearchMethod(string searchText)
     {
-        return new List<Person>() { 
+        return new List<Person>() {
             new Person() { Id = 1, Name = "Tom Holland", Picture = "https://m.media-amazon.com/images/M/MV5BNTAzMzA3NjQwOF5BMl5BanBnXkFtZTgwMDUzODQ5MTI@._V1_SY1000_CR0,0,824,1000_AL_.jpg" },
             new Person() { Id = 2, Name = "Tom Hanks", Picture = "https://m.media-amazon.com/images/M/MV5BMTQ2MjMwNDA3Nl5BMl5BanBnXkFtZTcwMTA2NDY3NQ@@._V1_SY1000_CR0,0,691,1000_AL_.jpg" }
         };
+    }
+
+    private async Task OnDataAnnotationsValidated()
+    {
+        Movie.MoviesGenres = Selected
+            .Select(x => new MoviesGenres { GenreId = int.Parse(x.Key) }).ToList();
+
+        Movie.MoviesActors = SelectedActors
+            .Select(x => new MoviesActors { PersonId = x.Id, Character = x.Character }).ToList();
+
+        if (!string.IsNullOrWhiteSpace(Movie.Poster)) { imageURL = null; }
+
+        await OnValidSubmit.InvokeAsync(null);
     }
 }
