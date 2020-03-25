@@ -1,4 +1,6 @@
-﻿<EditForm Model="Movie" OnValidSubmit="OnValidSubmit">
+﻿@inject IPersonRepository personRepository
+
+<EditForm Model="Movie" OnValidSubmit="OnDataAnnotationsValidated">
     <DataAnnotationsValidator />
     <div class="form-group">
         <label>Title:</label>
@@ -107,10 +109,7 @@
 
     private async Task<IEnumerable<Person>> SearchMethod(string searchText)
     {
-        return new List<Person>() {
-            new Person() { Id = 1, Name = "Tom Holland", Picture = "https://m.media-amazon.com/images/M/MV5BNTAzMzA3NjQwOF5BMl5BanBnXkFtZTgwMDUzODQ5MTI@._V1_SY1000_CR0,0,824,1000_AL_.jpg" },
-            new Person() { Id = 2, Name = "Tom Hanks", Picture = "https://m.media-amazon.com/images/M/MV5BMTQ2MjMwNDA3Nl5BMl5BanBnXkFtZTcwMTA2NDY3NQ@@._V1_SY1000_CR0,0,691,1000_AL_.jpg" }
-        };
+        return await personRepository.GetPeopleByName(searchText);
     }
 
     private async Task OnDataAnnotationsValidated()

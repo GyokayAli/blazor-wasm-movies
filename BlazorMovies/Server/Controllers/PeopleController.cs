@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BlazorMovies.Server.Helpers;
 using BlazorMovies.Shared.Entities;
@@ -25,6 +26,16 @@ namespace BlazorMovies.Server.Controllers
         public async Task<ActionResult<List<Person>>> Get()
         {
             return await _dbContext.People.ToListAsync();
+        }
+
+        [HttpGet("search/{searchText}")]
+        public async Task<ActionResult<List<Person>>> GetByName(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText)) { return new List<Person>(); }
+            return await _dbContext.People
+                .Where(x => x.Name.Contains(searchText))
+                .Take(5)
+                .ToListAsync();
         }
 
         [HttpPost]

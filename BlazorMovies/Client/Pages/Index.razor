@@ -1,10 +1,15 @@
 ﻿@page "/"
 @page "/index"
-@inject IRepository  repository
+@inject IMovieRepository movieRepository
 
 <div>
-    <h3>Movie</h3>
-    <MoviesList Movies="movies" />
+    <h3>In Theaters</h3>
+    <MoviesList Movies="inTheaters" />
+</div>
+
+<div>
+    <h3>Upcoming Releases</h3>
+    <MoviesList Movies="upcomingReleases" />
 </div>
 
 <CustomTypeahead SearchMethod="SearchMethod">
@@ -15,11 +20,14 @@
 
 @code {
 
-    private List<Movie> movies;
+    private List<Movie> inTheaters;
+    private List<Movie> upcomingReleases;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        movies = repository.GetMovies();
+        var response = await movieRepository.GetIndexPageDTO();
+        inTheaters = response.InTheaters;
+        upcomingReleases = response.UpcomingReleases;
     }
 
     private async Task<IEnumerable<string>> SearchMethod(string searchText)
