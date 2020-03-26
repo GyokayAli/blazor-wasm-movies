@@ -8,6 +8,8 @@ namespace BlazorMovies.Client.Repository
     {
         Task<List<Person>> GetPeople();
         Task<List<Person>> GetPeopleByName(string name);
+        Task<Person> GetPersonById(int id);
         Task CreatePerson(Person person);
+        Task UpdatePerson(Person person);
     }
 }

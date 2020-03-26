@@ -31,7 +31,7 @@ namespace BlazorMovies.Server.Helpers
 
         public async Task<string> EditFile(byte[] content, string extension, string containerName, string fileRoute)
         {
-            if (string.IsNullOrEmpty(fileRoute))
+            if (!string.IsNullOrEmpty(fileRoute))
             {
                 await DeleteFile(fileRoute, containerName);
             }

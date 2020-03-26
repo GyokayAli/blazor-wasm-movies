@@ -9,7 +9,7 @@ namespace BlazorMovies.Client.Repository
     public class PersonRepository : IPersonRepository
     {
         private readonly IHttpService _httpService;
-        private string url = "api/people";
+        private readonly string url = "api/people";
 
         public PersonRepository(IHttpService httpService)
         {
@@ -43,6 +43,20 @@ namespace BlazorMovies.Client.Repository
             {
                 throw new ApplicationException(await response.GetBody());
             }
+        }
+
+        public async Task UpdatePerson(Person person)
+        {
+            var response = await _httpService.Put(url, person);
+            if (!response.Success)
+            {
+                throw new ApplicationException(await response.GetBody());
+            }
+        }
+
+        public async Task<Person> GetPersonById(int id)
+        {
+            return await _httpService.GetHelper<Person>($"{url}/{id}");
         }
     }
 }
