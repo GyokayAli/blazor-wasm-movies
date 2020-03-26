@@ -16,11 +16,20 @@ namespace BlazorMovies.Server.Controllers
         {
             _dbContext = dbContext;
         }
-        
+
         [HttpGet]
         public async Task<ActionResult<List<Genre>>> Get()
         {
             return await _dbContext.Genres.ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Genre>> Get(int id)
+        {
+            var genre = await _dbContext.Genres.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (genre == null) { return NotFound(); }
+            return genre;
         }
 
         [HttpPost]
@@ -29,6 +38,14 @@ namespace BlazorMovies.Server.Controllers
             _dbContext.Add(genre);
             await _dbContext.SaveChangesAsync();
             return genre.Id;
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Put(Genre genre)
+        {
+            _dbContext.Attach(genre).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
