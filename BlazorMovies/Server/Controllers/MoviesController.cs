@@ -21,7 +21,7 @@ namespace BlazorMovies.Server.Controllers
             _dbContext = dbContext;
             _fileStorageService = fileStorageService;
         }
-        
+
         [HttpGet]
         public async Task<ActionResult<IndexPageDTO>> Get()
         {
@@ -46,6 +46,33 @@ namespace BlazorMovies.Server.Controllers
             };
 
             return response;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<MovieDetailsDTO>> Get(int id)
+        {
+            var movie = await _dbContext.Movies.Where(x => x.Id == id)
+                .Include(x => x.MoviesGenres).ThenInclude(x => x.Genre)
+                .Include(x => x.MoviesActors).ThenInclude(x => x.Person)
+                .FirstOrDefaultAsync();
+
+            if (movie == null) { return NotFound(); }
+
+            movie.MoviesActors = movie.MoviesActors.OrderBy(x => x.Order).ToList();
+
+            var model = new MovieDetailsDTO();
+            model.Movie = movie;
+            model.Genres = movie.MoviesGenres.Select(x => x.Genre).ToList();
+            model.Actors = movie.MoviesActors.Select(x =>
+                new Person
+                {
+                    Name = x.Person.Name,
+                    Picture = x.Person.Picture,
+                    Character = x.Character,
+                    Id = x.PersonId
+                }).ToList();
+
+            return model;
         }
 
         [HttpPost]

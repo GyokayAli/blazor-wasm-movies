@@ -25,9 +25,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await movieRepository.GetIndexPageDTO();
-        inTheaters = response.InTheaters;
-        upcomingReleases = response.UpcomingReleases;
+        try
+        {
+            var response = await movieRepository.GetIndexPageDTO();
+            inTheaters = response.InTheaters;
+            upcomingReleases = response.UpcomingReleases;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 
     private async Task<IEnumerable<string>> SearchMethod(string searchText)

@@ -1,7 +1,59 @@
 ﻿@page  "/movie/{MovieId:int}"
 @page  "/movie/{MovieId:int}/{MovieName}"
+@inject IMovieRepository movieRepository
+
+@if (model == null)
+{
+    <text>Loading...</text>
+}
+else
+{
+    <h2>@model.Movie.Title (@model.Movie.ReleaseDate.Value.ToString("yyyy"))</h2>
+    for (int i = 0; i < model.Genres.Count; i++)
+    {
+        @linkGenre(model.Genres[i])
+
+        if (i < model.Genres.Count - 1)
+        {
+            <text>, </text>
+        } 
+    }
+    <text> | </text> <span>@model.Movie.ReleaseDate.Value.ToString("dd MMM yyyy")</span>
+
+    <div style="display:flex">
+        <span style="display: inline-block; margin-right: 5px;">
+            <img src="@model.Movie.Poster" style="width: 225px; height: 315px;" />
+        </span>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/@model.Movie.Trailer" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div style="margin-top: 10px">
+        <h3>Summary</h3>
+        <div>
+            <RenderMarkdown MarkdownContent="@model.Movie.Summary" />
+        </div>
+    </div>
+    <div style="margin-top: 10px">
+        <h3>Actors</h3>
+        <div style="display: flex; flex-direction: column;">
+            @foreach (var actor in model.Actors)
+            {
+                <div style="margin-bottom: 2px">
+                    <img style="width: 50px;" src="@actor.Picture" />
+                    <span style="display: inline-block; width: 200px;">
+                        <a href="/person/@actor.Id/@actor.Name.Replace(" ", "-")">@actor.Name</a>
+                    </span>
+                    <span style="display: inline-block; width: 45px;">...</span>
+                    <span>@actor.Character</span>
+                </div>
+            }
+        </div>
+    </div>
+}
 
 @code {
+
+    private MovieDetailsDTO model;
+    private RenderFragment<Genre> linkGenre = (genre) => @<a href="movies/search?genreId=@genre.Id">@genre.Name</a>;
 
     [Parameter]
     public int MovieId { get; set; }
@@ -9,8 +61,17 @@
     [Parameter]
     public string MovieName { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine(MovieId);
+        try
+        {
+            Console.WriteLine(MovieId);
+            model = await movieRepository.GetMovieDetailsDTO(MovieId);
+            Console.WriteLine(model.Movie.Title);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 }

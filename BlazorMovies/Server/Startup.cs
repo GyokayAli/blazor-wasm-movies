@@ -29,7 +29,10 @@ namespace BlazorMovies.Server
 
             services.AddScoped<IFileStorageService, AzureStorageService>();
 
-            services.AddMvc();
+            services.AddMvc().AddNewtonsoftJson(options =>
+                // this will make it easier to serialize entities that have circular references
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddResponseCompression(opts =>
             {
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
