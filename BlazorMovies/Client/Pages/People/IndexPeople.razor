@@ -35,12 +35,15 @@
 @code {
 
     List<Person> people;
+    PaginationDTO pagination = new PaginationDTO();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            people = await personRepository.GetPeople();
+            var paginatedResponse = await personRepository.GetPeople(pagination);
+            people = paginatedResponse.Response;
+            Console.WriteLine(paginatedResponse.TotalAmountPages);
         }
         catch (Exception ex)
         {
@@ -51,6 +54,7 @@
     private async Task DeletePerson(int id)
     {
         await personRepository.DeletePerson(id);
-        people = await personRepository.GetPeople();
+        var paginatedResponse = await personRepository.GetPeople(pagination);
+        people = paginatedResponse.Response;
     }
 }
