@@ -12,7 +12,7 @@
     <div class="form-group">
         <label>In Theaters</label>
         <div>
-            <InputCheckbox @bind-Value="@Movie.InTheaters" />
+            <InputCheckbox @bind-Value="Movie.InTheaters" />
             <ValidationMessage For="@(() => Movie.InTheaters)" />
         </div>
     </div>
@@ -43,7 +43,7 @@
     <div class="form-group">
         <label>Genres:</label>
         <div>
-            <MultipleSelector Selected="Selected" NotSelected="NotSelected" />
+            <MultipleSelector Selected="Selected" NotSelected="NotSelected"></MultipleSelector>
         </div>
     </div>
 
@@ -51,10 +51,9 @@
         <label>Actors:</label>
         <div>
             <MultipleSelectorTypeahead Context="person"
-                                       SearchMethod="SearchMethod"
-                                       SelectedElements="SelectedActors">
+                                       SearchMethod="SearchMethod" SelectedElements="SelectedActors">
                 <MyResultTemplate>
-                    <img src="@person.Picture" style="width: 50px;" />
+                    <img style="width: 50px;" src="@person.Picture" />
                     @person.Name
                 </MyResultTemplate>
                 <MyListTemplate>
@@ -64,29 +63,20 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <button class="btn btn-primary" type="submit">Save Changes</button>
 </EditForm>
 
 @code {
+    [Parameter] public Movie Movie { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public List<Genre> SelectedGenres { get; set; } = new List<Genre>();
+    [Parameter] public List<Genre> NotSelectedGenres { get; set; } = new List<Genre>();
+    [Parameter] public List<Person> SelectedActors { get; set; } = new List<Person>();
 
-    private string imageURL;
     private List<MultipleSelectorModel> Selected = new List<MultipleSelectorModel>();
     private List<MultipleSelectorModel> NotSelected = new List<MultipleSelectorModel>();
 
-    [Parameter]
-    public Movie Movie { get; set; }
-
-    [Parameter]
-    public EventCallback OnValidSubmit { get; set; }
-
-    [Parameter]
-    public List<Genre> SelectedGenres { get; set; } = new List<Genre>();
-
-    [Parameter]
-    public List<Genre> NotSelectedGenres { get; set; } = new List<Genre>();
-
-    [Parameter]
-    public List<Person> SelectedActors { get; set; } = new List<Person>();
+    private string imageURL;
 
     protected override void OnInitialized()
     {
@@ -104,7 +94,6 @@
     {
         Movie.Poster = imageBase64;
         imageURL = null;
-        Console.WriteLine(imageBase64);
     }
 
     private async Task<IEnumerable<Person>> SearchMethod(string searchText)

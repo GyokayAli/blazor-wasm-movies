@@ -73,17 +73,10 @@ namespace BlazorMovies.Server.Controllers
 
             personInDb = _mapper.Map(person, personInDb);
 
-            try
+            if (!string.IsNullOrWhiteSpace(person.Picture))
             {
-                if (!string.IsNullOrWhiteSpace(person.Picture))
-                {
-                    byte[] personPicture = Convert.FromBase64String(person.Picture);
-                    personInDb.Picture = await _fileStorageService.EditFile(personPicture, "jpg", "people", personInDb.Picture);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                byte[] personPicture = Convert.FromBase64String(person.Picture);
+                personInDb.Picture = await _fileStorageService.EditFile(personPicture, "jpg", "people", personInDb.Picture);
             }
 
             await _dbContext.SaveChangesAsync();
