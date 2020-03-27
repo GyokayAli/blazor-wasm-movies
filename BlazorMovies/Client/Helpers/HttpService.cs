@@ -67,6 +67,12 @@ namespace BlazorMovies.Client.Helpers
             return new HttpResponseWrapper<object>(null, response.IsSuccessStatusCode, response);
         }
 
+        public async Task<HttpResponseWrapper<object>> Delete(string url)
+        {
+            var responseHttp = await _httpClient.DeleteAsync(url);
+            return new HttpResponseWrapper<object>(null, responseHttp.IsSuccessStatusCode, responseHttp);
+        }
+
         private async Task<T> Deserialize<T>(HttpResponseMessage httpResponse, JsonSerializerOptions options)
         {
             var responseString = await httpResponse.Content.ReadAsStringAsync();

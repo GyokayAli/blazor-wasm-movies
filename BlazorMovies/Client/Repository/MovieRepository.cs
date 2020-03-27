@@ -52,5 +52,10 @@ namespace BlazorMovies.Client.Repository
                 throw new ApplicationException(await response.GetBody());
             }
         }
+
+        public async Task DeleteMovie(int id)
+        {
+            await _httpService.DeleteHelper($"{url}/{id}");
+        }
     }
 }

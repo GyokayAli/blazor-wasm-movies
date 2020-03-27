@@ -11,5 +11,6 @@ namespace BlazorMovies.Client.Repository
         Task<int> CreateMovie (Movie movie);
         Task<MovieUpdateDTO> GetMovieForUpdate(int id);
         Task UpdateMovie(Movie movie);
+        Task DeleteMovie(int id);
     }
 }

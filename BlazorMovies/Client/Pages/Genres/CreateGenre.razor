@@ -12,9 +12,6 @@
 
     private async Task Create()
     {
-        Console.WriteLine("Create method");
-        Console.WriteLine(genre.Name);
-
         try
         {
             await genreRepository.CreateGenre(genre);
@@ -22,7 +19,6 @@
         }
         catch (Exception ex)
         {
-            //
             Console.WriteLine(ex.Message);
         }
     }

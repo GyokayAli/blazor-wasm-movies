@@ -14,5 +14,14 @@ namespace BlazorMovies.Client.Helpers
             }
             return response.Response;
         }
+
+        public static async Task DeleteHelper (this IHttpService httpService, string url)
+        {
+            var response = await httpService.Delete(url);
+            if (!response.Success)
+            {
+                throw new ApplicationException(await response.GetBody());
+            }
+        }
     }
 }
