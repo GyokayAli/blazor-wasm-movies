@@ -32,6 +32,19 @@ namespace BlazorMovies.Client.Repository
             return await _httpService.GetHelper<MovieUpdateDTO>($"{url}/update/{id}");
         }
 
+        public async Task<PaginatedResponse<List<Movie>>> GetMoviesFiltered(FilterMoviesDTO filterMoviesDto)
+        {
+            var responseHttp = await _httpService.Post<FilterMoviesDTO, List<Movie>>($"{url}/filter", filterMoviesDto);
+            var totalAmountPages = int.Parse(responseHttp.HttpResponseMessage.Headers.GetValues("totalAmountPages").FirstOrDefault());
+            var paginatedResponse = new PaginatedResponse<List<Movie>>()
+            {
+                Response = responseHttp.Response,
+                TotalAmountPages = totalAmountPages
+            };
+
+            return paginatedResponse;
+        }
+
         public async Task<int> CreateMovie(Movie movie)
         {
             var response = await _httpService.Post<Movie, int>(url, movie);

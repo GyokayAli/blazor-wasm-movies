@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -77,6 +78,42 @@ namespace BlazorMovies.Server.Controllers
                 }).ToList();
 
             return model;
+        }
+
+        [HttpPost("filter")]
+        public async Task<ActionResult<List<Movie>>> Filter(FilterMoviesDTO filterMoviesDto)
+        {
+            var moviesQueryable = _dbContext.Movies.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filterMoviesDto.Title))
+            {
+                moviesQueryable = moviesQueryable
+                    .Where(x => x.Title.Contains(filterMoviesDto.Title));
+            }
+
+            if (filterMoviesDto.InTheaters)
+            {
+                moviesQueryable = moviesQueryable.Where(x => x.InTheaters);
+            }
+
+            if (filterMoviesDto.UpcomingReleases)
+            {
+                var today = DateTime.Today;
+                moviesQueryable = moviesQueryable.Where(x => x.ReleaseDate > today);
+            }
+
+            if (filterMoviesDto.GenreId != 0)
+            {
+                moviesQueryable = moviesQueryable
+                    .Where(x => x.MoviesGenres.Select(y => y.GenreId)
+                    .Contains(filterMoviesDto.GenreId));
+            }
+
+            await HttpContext.InsertPaginationParamatersInResponse(moviesQueryable, filterMoviesDto.RecordsPerPage);
+
+            var movies = await moviesQueryable.Paginate(filterMoviesDto.Pagination).ToListAsync();
+
+            return movies;
         }
 
         [HttpGet("update/{id}")]
