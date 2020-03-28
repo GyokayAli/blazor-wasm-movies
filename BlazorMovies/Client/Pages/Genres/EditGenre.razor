@@ -1,6 +1,7 @@
 ﻿@page "/genre/edit/{GenreId:int}"
 @inject IGenreRepository  genreRepository
 @inject NavigationManager navigationManager
+@attribute [Authorize]
 
 @if (genre != null)
 {

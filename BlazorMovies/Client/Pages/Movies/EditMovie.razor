@@ -1,6 +1,7 @@
 ﻿@page "/movies/edit/{MovieId:int}"
 @inject IMovieRepository movieRepository
 @inject NavigationManager navigationManager
+@attribute [Authorize]
 
 <h3>Edit Movie</h3>
 
