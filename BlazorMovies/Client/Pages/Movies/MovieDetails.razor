@@ -65,9 +65,7 @@ else
     {
         try
         {
-            Console.WriteLine(MovieId);
             model = await movieRepository.GetMovieDetailsDTO(MovieId);
-            Console.WriteLine(model.Movie.Title);
         }
         catch (Exception ex)
         {
