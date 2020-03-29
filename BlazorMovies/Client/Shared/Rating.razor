@@ -1,0 +1,35 @@
+﻿@for (int i = 1; i <= MaximumRating; i++)
+{
+    var starNumber = i;
+    <span @onclick="@(() => onClickHandle(starNumber))"
+          @onmouseover="@(() => onMouseOverHandle(starNumber))"
+          style="cursor: pointer"
+          class="fa fa-star @(SelectedRating >= i ? "checked" : null)">
+
+    </span>
+}
+
+
+@code {
+
+    private bool voted;
+
+    [Parameter] public int MaximumRating { get; set; }
+    [Parameter] public int SelectedRating { get; set; }
+    [Parameter] public EventCallback<int> OnVote { get; set; }
+
+    private async Task onClickHandle(int starNumber)
+    {
+        SelectedRating = starNumber;
+        voted = true;
+        await OnVote.InvokeAsync(SelectedRating);
+    }
+
+    private void onMouseOverHandle(int starNumber)
+    {
+        if (!voted)
+        {
+            SelectedRating = starNumber;
+        }
+    }
+}

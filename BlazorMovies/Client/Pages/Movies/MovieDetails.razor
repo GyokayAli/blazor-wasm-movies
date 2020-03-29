@@ -1,6 +1,7 @@
 ﻿@page  "/movie/{MovieId:int}"
 @page  "/movie/{MovieId:int}/{MovieName}"
 @inject IMovieRepository movieRepository
+@inject IRatingRepository ratingRepository
 
 @if (model == null)
 {
@@ -16,9 +17,11 @@ else
         if (i < model.Genres.Count - 1)
         {
             <text>, </text>
-        } 
+        }
     }
     <text> | </text> <span>@model.Movie.ReleaseDate.Value.ToString("dd MMM yyyy")</span>
+    <text> | Average: </text> @model.AverageVote.ToString("0.#") <text>/5 | Your vote: </text>
+    <Rating MaximumRating="5" SelectedRating="model.UserVote" OnVote="OnVote" />
 
     <div style="display:flex">
         <span style="display: inline-block; margin-right: 5px;">
@@ -53,7 +56,7 @@ else
 @code {
 
     private MovieDetailsDTO model;
-    private RenderFragment<Genre> linkGenre = (genre) => @<a href="movies/search?genreId=@genre.Id">@genre.Name</a>;
+    private RenderFragment<Genre> linkGenre = (genre) =>@<a href="movies/search?genreId=@genre.Id">@genre.Name</a>;
 
     [Parameter]
     public int MovieId { get; set; }
@@ -71,5 +74,12 @@ else
         {
             Console.WriteLine(ex.Message);
         }
+    }
+
+    private async Task OnVote(int selectedRate)
+    {
+        model.UserVote = selectedRate;
+        var movieRating = new MovieRating() { Rate = selectedRate, MovieId = MovieId };
+        await ratingRepository.Vote(movieRating);
     }
 }

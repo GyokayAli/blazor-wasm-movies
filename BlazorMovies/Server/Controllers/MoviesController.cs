@@ -8,6 +8,7 @@ using BlazorMovies.Shared.DTO;
 using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,13 +22,16 @@ namespace BlazorMovies.Server.Controllers
         private readonly ApplicationDbContext _dbContext;
         private readonly IFileStorageService _fileStorageService;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
         private const string ContainerName = "movies";
 
-        public MoviesController(ApplicationDbContext dbContext, IFileStorageService fileStorageService, IMapper mapper)
+        public MoviesController(ApplicationDbContext dbContext, IFileStorageService fileStorageService,
+            IMapper mapper, UserManager<IdentityUser> userManager)
         {
             _dbContext = dbContext;
             _fileStorageService = fileStorageService;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -68,10 +72,35 @@ namespace BlazorMovies.Server.Controllers
 
             if (movie == null) { return NotFound(); }
 
+            var averageVote = 0.0;
+            var userVote = 0;
+
+            if (await _dbContext.MovieRatings.AnyAsync(x => x.MovieId == id))
+            {
+                averageVote = await _dbContext.MovieRatings.Where(x => x.MovieId == id)
+                    .AverageAsync(x => x.Rate);
+
+                if (User.Identity.IsAuthenticated)
+                {
+                    var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+                    var userId = user.Id;
+
+                    var userVoteInDb = await _dbContext.MovieRatings
+                        .FirstOrDefaultAsync(x => x.MovieId == id && x.UserId == userId);
+
+                    if (userVoteInDb != null)
+                    {
+                        userVote = userVoteInDb.Rate;
+                    }
+                }
+            }
+
             movie.MoviesActors = movie.MoviesActors.OrderBy(x => x.Order).ToList();
 
             var model = new MovieDetailsDTO();
             model.Movie = movie;
+            model.UserVote = userVote;
+            model.AverageVote = averageVote;
             model.Genres = movie.MoviesGenres.Select(x => x.Genre).ToList();
             model.Actors = movie.MoviesActors.Select(x =>
                 new Person
