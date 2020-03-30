@@ -2,6 +2,7 @@
 @page  "/movie/{MovieId:int}/{MovieName}"
 @inject IMovieRepository movieRepository
 @inject IRatingRepository ratingRepository
+@inject IDisplayMessage displayMessage
 
 @if (model == null)
 {
@@ -81,5 +82,7 @@ else
         model.UserVote = selectedRate;
         var movieRating = new MovieRating() { Rate = selectedRate, MovieId = MovieId };
         await ratingRepository.Vote(movieRating);
+
+        await displayMessage.DisplaySuccessMessage("Your vote have been received"!);
     }
 }

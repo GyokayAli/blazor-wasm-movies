@@ -1,4 +1,6 @@
-﻿@for (int i = 1; i <= MaximumRating; i++)
+﻿@inject IDisplayMessage displayMessage
+
+@for (int i = 1; i <= MaximumRating; i++)
 {
     var starNumber = i;
     <span @onclick="@(() => onClickHandle(starNumber))"
@@ -17,9 +19,19 @@
     [Parameter] public int MaximumRating { get; set; }
     [Parameter] public int SelectedRating { get; set; }
     [Parameter] public EventCallback<int> OnVote { get; set; }
+    [CascadingParameter] public Task<AuthenticationState> AuthenticationState { get; set; }
 
     private async Task onClickHandle(int starNumber)
     {
+        var authState = await AuthenticationState;
+        var user = authState.User;
+
+        if (!user.Identity.IsAuthenticated)
+        {
+            await displayMessage.DisplayErrorMessage("You must login in order to vote!");
+            return;
+        }
+
         SelectedRating = starNumber;
         voted = true;
         await OnVote.InvokeAsync(SelectedRating);
