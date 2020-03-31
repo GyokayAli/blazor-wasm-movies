@@ -21,6 +21,7 @@ namespace BlazorMovies.Client
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IRatingRepository, RatingRepository>();
             services.AddScoped<IDisplayMessage, DisplayMessage>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
 
