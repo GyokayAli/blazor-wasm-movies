@@ -55,7 +55,7 @@
     protected override async Task OnInitializedAsync()
     {
         var queryStrings = navigationManager.GetQueryStrings(navigationManager.Uri);
-        Genres = await genreRepository.GetGenres();
+        Genres = await genreRepository.GetGenres(includeToken: false);
 
         if (queryStrings != null)
         {

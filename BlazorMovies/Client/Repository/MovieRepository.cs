@@ -20,13 +20,14 @@ namespace BlazorMovies.Client.Repository
 
         public async Task<IndexPageDTO> GetIndexPageDTO()
         {
-            return await _httpService.GetHelper<IndexPageDTO>(url);
+            return await _httpService.GetHelper<IndexPageDTO>(url, false);
         }
 
         public async Task<MovieDetailsDTO> GetMovieDetailsDTO(int id)
         {
-            return await _httpService.GetHelper<MovieDetailsDTO>($"{url}/{id}");
+            return await _httpService.GetHelper<MovieDetailsDTO>($"{url}/{id}", false);
         }
+
         public async Task<MovieUpdateDTO> GetMovieForUpdate(int id)
         {
             return await _httpService.GetHelper<MovieUpdateDTO>($"{url}/update/{id}");
@@ -34,7 +35,7 @@ namespace BlazorMovies.Client.Repository
 
         public async Task<PaginatedResponse<List<Movie>>> GetMoviesFiltered(FilterMoviesDTO filterMoviesDto)
         {
-            var responseHttp = await _httpService.Post<FilterMoviesDTO, List<Movie>>($"{url}/filter", filterMoviesDto);
+            var responseHttp = await _httpService.Post<FilterMoviesDTO, List<Movie>>($"{url}/filter", filterMoviesDto, includeToken: false);
             var totalAmountPages = int.Parse(responseHttp.HttpResponseMessage.Headers.GetValues("totalAmountPages").FirstOrDefault());
             var paginatedResponse = new PaginatedResponse<List<Movie>>()
             {

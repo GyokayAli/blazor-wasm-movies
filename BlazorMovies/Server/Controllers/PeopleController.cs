@@ -6,7 +6,6 @@ using AutoMapper;
 using BlazorMovies.Server.Helpers;
 using BlazorMovies.Shared.DTO;
 using BlazorMovies.Shared.Entities;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +14,7 @@ namespace BlazorMovies.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class PeopleController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
