@@ -12,40 +12,13 @@
     <MoviesList Movies="upcomingReleases" />
 </div>
 
-<CustomTypeahead SearchMethod="SearchMethod">
-    <ResultTemplate>
-        @context
-    </ResultTemplate>
-</CustomTypeahead>
-
-@code {
-
+@code{
     private List<Movie> inTheaters;
     private List<Movie> upcomingReleases;
-
-    protected override async Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
     {
-        try
-        {
-            var response = await movieRepository.GetIndexPageDTO();
-            inTheaters = response.InTheaters;
-            upcomingReleases = response.UpcomingReleases;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
-
-    private async Task<IEnumerable<string>> SearchMethod(string searchText)
-    {
-        await Task.Delay(2000);
-
-        if (searchText == "test")
-        {
-            return Enumerable.Empty<string>();
-        }
-
-        return new List<string>() { "Gyokay", "Ali" };
+        var response = await movieRepository.GetIndexPageDTO();
+        inTheaters = response.InTheaters;
+        upcomingReleases = response.UpcomingReleases;
     }
 }
