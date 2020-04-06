@@ -1,0 +1,29 @@
+﻿@page "/person/{PersonId:int}"
+@inject IPersonRepository personRepository
+
+@if (person == null)
+{
+    <text>Loading...</text>
+}
+else
+{
+    
+}
+
+@code {
+
+    Person person;
+    [Parameter] public int PersonId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            person = await personRepository.GetPersonById(PersonId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}
