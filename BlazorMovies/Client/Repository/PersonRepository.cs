@@ -55,6 +55,11 @@ namespace BlazorMovies.Client.Repository
             return await _httpService.GetHelper<Person>($"{url}/{id}");
         }
 
+        public async Task<PersonDetailsDTO> GetPersonDetailsDTO(int id)
+        {
+            return await _httpService.GetHelper<PersonDetailsDTO>($"{url}/view/{id}", false);
+        }
+
         public async Task DeletePerson(int id)
         {
             await _httpService.DeleteHelper($"{url}/{id}");

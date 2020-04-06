@@ -46,6 +46,41 @@ namespace BlazorMovies.Server.Controllers
             return person;
         }
 
+        [HttpGet("view/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<PersonDetailsDTO>> GetDisplay(int id)
+        {
+            var person = await _dbContext.People.Where(x => x.Id == id)
+                .Include(x => x.MoviesActors).ThenInclude(x => x.Movie)
+                .FirstOrDefaultAsync();
+
+            if (person == null) { return NotFound(); }
+
+            var model = new PersonDetailsDTO();
+            person.MoviesActors = person.MoviesActors.OrderByDescending(x => x.Movie.ReleaseDate).ToList();
+
+            if (person.MoviesActors.Any())
+            {
+                var featuredMovie = person.MoviesActors.FirstOrDefault();
+                if (featuredMovie != null)
+                {
+                    model.FeaturedMovieTrailer = featuredMovie.Movie.Trailer;
+                }
+            }
+
+            model.Person = person;
+            model.Movies = person.MoviesActors.Select(x =>
+                new Movie
+                {
+                    Id = x.MovieId,
+                    Poster = x.Movie.Poster,
+                    Title = x.Movie.Title,
+                    ReleaseDate = x.Movie.ReleaseDate
+                }).ToList();
+
+            return model;
+        }
+
         [HttpGet("search/{searchText}")]
         public async Task<ActionResult<List<Person>>> GetByName(string searchText)
         {

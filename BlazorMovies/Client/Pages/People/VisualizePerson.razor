@@ -1,25 +1,61 @@
 ﻿@page "/person/{PersonId:int}"
 @inject IPersonRepository personRepository
 
-@if (person == null)
+@if (model == null)
 {
     <text>Loading...</text>
 }
 else
 {
-    
+    <h2>@model.Person.Name</h2>
+    <div style="display:flex">
+        <span style="display: inline-block; margin-right: 5px;">
+            <img src="@model.Person.Picture" style="width: 225px; height: 315px;" />
+        </span>
+        @if (!string.IsNullOrWhiteSpace(@model.FeaturedMovieTrailer))
+        {
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/@model.FeaturedMovieTrailer" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        }
+    </div>
+    <div style="margin-top: 10px">
+        <h3>Biography</h3>
+        <div>
+            <RenderMarkdown MarkdownContent="@model.Person.Biography" />
+        </div>
+        <div>
+            <h4 style="display: inline">Born:</h4>
+            <time>@model.Person.DateOfBirth.Value.ToString("dd MMM yyyy")</time>
+        </div>
+    </div>
+    <div style="margin-top: 10px">
+        <h3>Filmography</h3>
+        <div style="display: flex; flex-direction: column;">
+            @foreach (var movie in model.Movies)
+            {
+                <div style="margin-bottom: 2px">
+                    <img style="width: 50px;" src="@movie.Poster" />
+                    <span style="display: inline-block; width: 200px;">
+                        <a href="/movie/@movie.Id/@movie.Title.Replace(" ", "-")">@movie.TitleBrief</a>
+                    </span>
+                    <span style="display: inline-block; width: 45px;">...</span>
+                    <span>(@movie.ReleaseDate.Value.ToString("yyyy"))</span>
+                </div>
+            }
+        </div>
+    </div>
 }
 
 @code {
 
-    Person person;
+    PersonDetailsDTO model;
+
     [Parameter] public int PersonId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            person = await personRepository.GetPersonById(PersonId);
+            model = await personRepository.GetPersonDetailsDTO(PersonId);
         }
         catch (Exception ex)
         {
