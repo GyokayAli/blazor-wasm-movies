@@ -96,11 +96,14 @@ namespace BlazorMovies.Server.Controllers
 
             movie.MoviesActors = movie.MoviesActors.OrderBy(x => x.Order).ToList();
 
-            var model = new MovieDetailsDTO();
-            model.Movie = movie;
-            model.UserVote = userVote;
-            model.AverageVote = averageVote;
-            model.Genres = movie.MoviesGenres.Select(x => x.Genre).ToList();
+            var model = new MovieDetailsDTO
+            {
+                Movie = movie,
+                UserVote = userVote,
+                AverageVote = averageVote,
+                Genres = movie.MoviesGenres.Select(x => x.Genre).ToList()
+            };
+            
             model.Actors = movie.MoviesActors.Select(x =>
                 new Person
                 {
@@ -134,6 +137,15 @@ namespace BlazorMovies.Server.Controllers
             {
                 var today = DateTime.Today;
                 moviesQueryable = moviesQueryable.Where(x => x.ReleaseDate > today);
+            }
+
+            if (filterMoviesDto.OrderByVotes)
+            {
+                var movieRatings = _dbContext.MovieRatings.AsQueryable();
+
+                moviesQueryable = moviesQueryable.OrderBy(x =>
+                    movieRatings.Where(y => y.MovieId == x.Id).Average(z => z.Rate)
+                );
             }
 
             if (filterMoviesDto.GenreId != 0)

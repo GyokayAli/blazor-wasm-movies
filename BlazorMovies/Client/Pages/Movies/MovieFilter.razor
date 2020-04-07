@@ -32,11 +32,16 @@
         </div>
         <div class="form-group mx-sm-3 mb-2">
             <input type="checkbox" class="form-check-input" id="inTheaters" @bind="filterMoviesDto.InTheaters" />
-            <label class="form-check-label" for="upcomingReleases">
+            <label class="form-check-label" for="inTheaters">
                 In Theaters
             </label>
         </div>
-
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="checkbox" class="form-check-input" id="orderByMostVoted" @bind="filterMoviesDto.OrderByVotes" />
+            <label class="form-check-label" for="orderByMostVoted">
+                Most Voted
+            </label>
+        </div>
         <button type="button" class="btn btn-primary mb-2 mx-sm-3" @onclick="SearchForMovies">Filter</button>
         <button type="button" class="btn btn-danger mb-2" @onclick="Clear">Clear</button>
     </div>
@@ -86,6 +91,11 @@
             filterMoviesDto.UpcomingReleases = bool.Parse(queryStrings["upcomingReleases"]);
         }
 
+        if (queryStrings.ContainsKey("orderByVotes"))
+        {
+            filterMoviesDto.UpcomingReleases = bool.Parse(queryStrings["orderByVotes"]);
+        }
+
         if (queryStrings.ContainsKey("page"))
         {
             filterMoviesDto.Page = int.Parse(queryStrings["page"]);
@@ -123,6 +133,7 @@
         filterMoviesDto.GenreId = 0;
         filterMoviesDto.UpcomingReleases = false;
         filterMoviesDto.InTheaters = false;
+        filterMoviesDto.OrderByVotes = false;
 
         await LoadMovies();
     }
@@ -142,6 +153,7 @@
         queryStringDict["title"] = filterMoviesDto.Title ?? "";
         queryStringDict["inTheaters"] = filterMoviesDto.InTheaters.ToString();
         queryStringDict["upcomingReleases"] = filterMoviesDto.UpcomingReleases.ToString();
+        queryStringDict["orderByVotes"] = filterMoviesDto.OrderByVotes.ToString();
         queryStringDict["page"] = filterMoviesDto.Page.ToString();
 
         var defaultValues = new List<string>() { "false", "", "0" };

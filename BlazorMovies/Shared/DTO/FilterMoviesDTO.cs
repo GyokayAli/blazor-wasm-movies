@@ -12,5 +12,6 @@
         public int GenreId { get; set; }
         public bool InTheaters { get; set; }
         public bool UpcomingReleases { get; set; }
+        public bool OrderByVotes { get; set; }
     }
 }
