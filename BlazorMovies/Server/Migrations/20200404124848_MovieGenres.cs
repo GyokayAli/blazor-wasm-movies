@@ -30,7 +30,9 @@ namespace BlazorMovies.Server.Migrations
                     { 3, "Horror" },
                     { 2, "Action" },
                     { 19, "War" },
-                    { 20, "Western" }
+                    { 20, "Western" },
+                    { 21, "Adventure" },
+                    { 22, "History" }
                 });
         }
 
@@ -135,6 +137,16 @@ namespace BlazorMovies.Server.Migrations
                 table: "Genres",
                 keyColumn: "Id",
                 keyValue: 20);
+
+            migrationBuilder.DeleteData(
+                table: "Genres",
+                keyColumn: "Id",
+                keyValue: 21);
+
+            migrationBuilder.DeleteData(
+                table: "Genres",
+                keyColumn: "Id",
+                keyValue: 22);
         }
     }
 }
