@@ -6,45 +6,45 @@ using System.Threading.Tasks;
 
 namespace BlazorMovies.Client.Repository
 {
-    public class GenreRepository : IGenreRepository
+    public class TheaterRepository : ITheaterRepository
     {
         private readonly IHttpService _httpService;
-        private readonly string url = "api/genres";
+        private readonly string url = "api/theaters";
 
-        public GenreRepository(IHttpService httpService)
+        public TheaterRepository(IHttpService httpService)
         {
             _httpService = httpService;
         }
 
-        public async Task<List<Genre>> GetGenres(bool includeToken = true)
+        public async Task<List<Theater>> GetTheaters()
         {
-            return await _httpService.GetHelper<List<Genre>>(url, includeToken);
+            return await _httpService.GetHelper<List<Theater>>(url, false);
         }
 
-        public async Task<Genre> GetGenre(int id)
+        public async Task<Theater> GetTheater(int id)
         {
-            return await _httpService.GetHelper<Genre>($"{url}/{id}", false);
+            return await _httpService.GetHelper<Theater>($"{url}/{id}", false);
         }
 
-        public async Task CreateGenre(Genre genre)
+        public async Task CreateTheater(Theater theater)
         {
-            var response = await _httpService.Post(url, genre);
+            var response = await _httpService.Post(url, theater);
             if (!response.Success)
             {
                 throw new ApplicationException(await response.GetBody());
             }
         }
 
-        public async Task UpdateGenre(Genre genre)
+        public async Task UpdateTheater(Theater theater)
         {
-            var response = await _httpService.Put(url, genre);
+            var response = await _httpService.Put(url, theater);
             if (!response.Success)
             {
                 throw new ApplicationException(await response.GetBody());
             }
         }
 
-        public async Task DeleteGenre(int id)
+        public async Task DeleteTheater(int id)
         {
             await _httpService.DeleteHelper($"{url}/{id}");
         }

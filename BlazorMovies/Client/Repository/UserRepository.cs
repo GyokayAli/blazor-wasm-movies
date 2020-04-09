@@ -16,7 +16,6 @@ namespace BlazorMovies.Client.Repository
             _httpService = httpService;
         }
 
-
         public async Task<PaginatedResponse<List<UserDTO>>> GetUsers(PaginationDTO pagination)
         {
             return await _httpService.GetHelper<List<UserDTO>>(url, pagination);

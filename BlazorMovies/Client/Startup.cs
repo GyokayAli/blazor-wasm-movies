@@ -20,6 +20,7 @@ namespace BlazorMovies.Client
             services.AddScoped<IRatingRepository, RatingRepository>();
             services.AddScoped<IDisplayMessage, DisplayMessage>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITheaterRepository, TheaterRepository>();
             services.AddTransient<CustomHttpClientFactory>();
 
             services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
