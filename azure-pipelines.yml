@@ -15,10 +15,9 @@ variables:
 
 steps:
 
-- task: NuGetCommand@2
+- task: NuGetToolInstaller@1
   inputs:
-    restoreSolution: '$(myproject)'
-    packagesdirectory: '..\packages'
+    versionSpec: '4.1.0'
 
 - task: UseDotNet@2
   inputs:
