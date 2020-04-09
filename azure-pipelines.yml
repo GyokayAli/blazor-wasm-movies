@@ -24,7 +24,7 @@ steps:
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
-    restoreSolution: '**/*.sln'
+    restoreSolution: $(solution)
     feedsToUse: 'select'
     vstsFeed: '58ba5242-1f79-4101-98f0-d37a530fdf11'
 - task: UseDotNet@2
