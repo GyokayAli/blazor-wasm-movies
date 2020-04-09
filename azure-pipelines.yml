@@ -12,8 +12,15 @@ pool:
 variables:
   buildConfiguration: 'Release'
   myproject: 'BlazorMovies/Server/BlazorMovies.Server.csproj'
+  solution: 'BlazorMovies/BlazorMovies.sln'
 
 steps:
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+    packagesdirectory: '..\packages'
+
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
