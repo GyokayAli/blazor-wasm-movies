@@ -10,9 +10,8 @@ pool:
   vmImage: 'vs2017-win2016'
 
 variables:
-  buildConfiguration: 'Release'
+  buildConfiguration: 'Debug'
   myproject: 'BlazorMovies/Server/BlazorMovies.Server.csproj'
-  solution: 'BlazorMovies/BlazorMovies.sln'
 steps:
 
 - task: NuGetToolInstaller@1
@@ -23,8 +22,8 @@ steps:
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '3.x'
-- script: dotnet build $(solution) --configuration $(buildConfiguration)
+    version: '3.1.x'
+- script: dotnet build $(myproject) --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 - task: CmdLine@2
   displayName: 'Installing EF Core CLI tools'
