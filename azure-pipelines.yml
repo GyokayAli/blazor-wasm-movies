@@ -16,9 +16,17 @@ variables:
 steps:
 
 - task: NuGetToolInstaller@1
+  displayName: 'Install NuGet 4.9.1'
   inputs:
     versionSpec: '4.9.1'
-
+    checkLatest: true
+- task: NuGetCommand@2
+  displayName: 'Restore NuGet Packages'
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+    feedsToUse: 'select'
+    vstsFeed: '58ba5242-1f79-4101-98f0-d37a530fdf11'
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
