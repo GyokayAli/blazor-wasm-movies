@@ -10,7 +10,7 @@ pool:
   vmImage: 'vs2017-win2016'
 
 variables:
-  buildConfiguration: 'Debug'
+  buildConfiguration: 'Release'
   myproject: 'BlazorMovies/Server/BlazorMovies.Server.csproj'
 steps:
 
@@ -22,8 +22,8 @@ steps:
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '3.1.x'
-- script: dotnet build $(myproject) --configuration $(buildConfiguration) --no-restore
+    version: '3.x'
+- script: dotnet build $(myproject) --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 - task: CmdLine@2
   displayName: 'Installing EF Core CLI tools'
