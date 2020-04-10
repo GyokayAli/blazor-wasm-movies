@@ -11,5 +11,6 @@ namespace BlazorMovies.Client.Repository
         Task CreateTheater(Theater theater);
         Task UpdateTheater(Theater theater);
         Task DeleteTheater(int id);
+        Task<List<Theater>> GetTheaterByKeyword(string keyword);
     }
 }

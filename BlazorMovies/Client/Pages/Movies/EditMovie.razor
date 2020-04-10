@@ -9,7 +9,8 @@
 {
     <MovieForm Movie="Movie" OnValidSubmit="Edit" NotSelectedGenres="NotSelectedGenres"
                SelectedGenres="SelectedGenres"
-               SelectedActors="SelectedActors" />
+               SelectedActors="SelectedActors"
+               SelectedTheaters="SelectedTheaters" />
 }
 
 @code {
@@ -18,12 +19,14 @@
     private List<Genre> NotSelectedGenres;
     private List<Genre> SelectedGenres;
     private List<Person> SelectedActors;
+    private List<Theater> SelectedTheaters;
 
     protected async override Task OnInitializedAsync()
     {
         var model = await movieRepository.GetMovieForUpdate(MovieId);
         Movie = model.Movie;
         SelectedActors = model.Actors;
+        SelectedTheaters = model.Theaters;
         SelectedGenres = model.SelectedGenres;
         NotSelectedGenres = model.NotSelectedGenres;
     }

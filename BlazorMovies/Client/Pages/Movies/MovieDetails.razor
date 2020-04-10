@@ -52,34 +52,52 @@ else
             }
         </div>
     </div>
+    @if (model.Theaters.Any())
+    {
+        <div style="margin-top: 10px">
+            <h3>In Theaters</h3>
+            <div style="display: flex; flex-direction: column;">
+                @foreach (var theater in model.Theaters)
+                {
+                    <div style="margin-bottom: 2px">
+                        <span style="display: inline-block; width: 200px;">
+                            <a href="/theater/@theater.Id">@theater.Name</a>
+                        </span>
+                        <span style="display: inline-block; width: 45px;">...</span>
+                        <span>@theater.Address</span>
+                    </div>
+                }
+            </div>
+        </div>
+    }
 }
 
 @code {
 
     private MovieDetailsDTO model;
     private RenderFragment<Genre> linkGenre = (genre) =>@<a href="movies/search?genreId=@genre.Id">@genre.Name</a>;
-    
-    [Parameter] public int MovieId { get; set; }
-    [Parameter] public string MovieName { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            model = await movieRepository.GetMovieDetailsDTO(MovieId);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
+[Parameter] public int MovieId { get; set; }
+[Parameter] public string MovieName { get; set; }
 
-    private async Task OnVote(int selectedRate)
-    {
-        model.UserVote = selectedRate;
-        var movieRating = new MovieRating() { Rate = selectedRate, MovieId = MovieId };
-        await ratingRepository.Vote(movieRating);
+protected override async Task OnInitializedAsync()
+{
+try
+{
+model = await movieRepository.GetMovieDetailsDTO(MovieId);
+}
+catch (Exception ex)
+{
+Console.WriteLine(ex.Message);
+}
+}
 
-        await displayMessage.DisplaySuccessMessage("Your vote have been received"!);
-    }
+private async Task OnVote(int selectedRate)
+{
+model.UserVote = selectedRate;
+var movieRating = new MovieRating() { Rate = selectedRate, MovieId = MovieId };
+await ratingRepository.Vote(movieRating);
+
+await displayMessage.DisplaySuccessMessage("Your vote have been received"!);
+}
 }

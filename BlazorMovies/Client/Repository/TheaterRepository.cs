@@ -26,6 +26,11 @@ namespace BlazorMovies.Client.Repository
             return await _httpService.GetHelper<Theater>($"{url}/{id}", false);
         }
 
+        public async Task<List<Theater>> GetTheaterByKeyword(string keyword)
+        {
+            return await _httpService.GetHelper<List<Theater>>($"{url}/search/{keyword}");
+        }
+
         public async Task CreateTheater(Theater theater)
         {
             var response = await _httpService.Post(url, theater);

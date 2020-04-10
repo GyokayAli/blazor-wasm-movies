@@ -67,6 +67,7 @@ namespace BlazorMovies.Server.Controllers
             var movie = await _dbContext.Movies.Where(x => x.Id == id)
                 .Include(x => x.MoviesGenres).ThenInclude(x => x.Genre)
                 .Include(x => x.MoviesActors).ThenInclude(x => x.Person)
+                .Include(x => x.MoviesTheaters).ThenInclude(x => x.Theater)
                 .FirstOrDefaultAsync();
 
             if (movie == null) { return NotFound(); }
@@ -103,7 +104,7 @@ namespace BlazorMovies.Server.Controllers
                 AverageVote = averageVote,
                 Genres = movie.MoviesGenres.Select(x => x.Genre).ToList()
             };
-            
+
             model.Actors = movie.MoviesActors.Select(x =>
                 new Person
                 {
@@ -111,6 +112,14 @@ namespace BlazorMovies.Server.Controllers
                     Picture = x.Person.Picture,
                     Character = x.Character,
                     Id = x.PersonId
+                }).ToList();
+
+            model.Theaters = movie.MoviesTheaters.Select(x =>
+                new Theater
+                {
+                    Name = x.Theater.Name,
+                    Address = x.Theater.Address,
+                    Id = x.TheaterId
                 }).ToList();
 
             return model;
@@ -179,7 +188,8 @@ namespace BlazorMovies.Server.Controllers
                 Movie = movieDetailDTO.Movie,
                 SelectedGenres = movieDetailDTO.Genres,
                 NotSelectedGenres = notSelectedGenres,
-                Actors = movieDetailDTO.Actors
+                Actors = movieDetailDTO.Actors,
+                Theaters = movieDetailDTO.Theaters
             };
 
             return model;
@@ -222,7 +232,7 @@ namespace BlazorMovies.Server.Controllers
                 movieInDb.Poster = await _fileStorageService.EditFile(moviePoster, "jpg", ContainerName, movieInDb.Poster);
             }
 
-            await _dbContext.Database.ExecuteSqlInterpolatedAsync($"delete from MoviesActors where MovieId = {movie.Id}; delete from MoviesGenres where MovieId = {movie.Id};");
+            await _dbContext.Database.ExecuteSqlInterpolatedAsync($"delete from MoviesActors where MovieId = {movie.Id}; delete from MoviesGenres where MovieId = {movie.Id}; delete from MoviesTheaters where MovieId = {movie.Id};");
 
             if (movie.MoviesActors != null)
             {
@@ -234,6 +244,7 @@ namespace BlazorMovies.Server.Controllers
 
             movieInDb.MoviesActors = movie.MoviesActors;
             movieInDb.MoviesGenres = movie.MoviesGenres;
+            movieInDb.MoviesTheaters = movie.MoviesTheaters;
 
             await _dbContext.SaveChangesAsync();
             return NoContent();

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,16 @@ namespace BlazorMovies.Server.Controllers
 
             if (theater == null) { return NotFound(); }
             return theater;
+        }
+
+        [HttpGet("search/{keyword}")]
+        public async Task<ActionResult<List<Theater>>> GetByKeyword(string keyword)
+        {
+             if (string.IsNullOrWhiteSpace(keyword)) { return new List<Theater>(); }
+            return await _dbContext.Theaters
+                .Where(x => x.Name.Contains(keyword.Trim()) || x.Address.Contains(keyword.Trim()))
+                .Take(5)
+                .ToListAsync();
         }
 
         [HttpPost]
