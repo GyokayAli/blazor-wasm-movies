@@ -20,11 +20,11 @@
         genre = await genreRepository.GetGenre(GenreId);
     }
 
-    private void Edit()
+    private async Task Edit()
     {
         try
         {
-            genreRepository.UpdateGenre(genre);
+            await genreRepository.UpdateGenre(genre);
             navigationManager.NavigateTo("genres");
         }
         catch (Exception ex)

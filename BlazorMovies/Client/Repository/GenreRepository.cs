@@ -23,7 +23,8 @@ namespace BlazorMovies.Client.Repository
 
         public async Task<Genre> GetGenre(int id)
         {
-            return await _httpService.GetHelper<Genre>($"{url}/{id}", false);
+            Console.WriteLine(id);
+            return await _httpService.GetHelper<Genre>($"{url}/{id}", true);
         }
 
         public async Task CreateGenre(Genre genre)

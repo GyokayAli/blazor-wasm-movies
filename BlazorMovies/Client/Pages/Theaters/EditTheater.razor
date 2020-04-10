@@ -1,5 +1,35 @@
-﻿<h3>EditTheater</h3>
+﻿@page "/theater/edit/{TheaterId:int}"
+@inject ITheaterRepository theaterRepository
+@inject NavigationManager navigationManager
+@attribute [Authorize]
+
+@if (theater != null)
+{
+    <TheaterForm Theater="theater" OnValidSubmit="Edit" />
+}
 
 @code {
 
+    [Parameter]
+    public int TheaterId { get; set; }
+
+    public Theater theater;
+
+    protected override async Task OnInitializedAsync()
+    {
+        theater = await theaterRepository.GetTheater(TheaterId);
+    }
+
+    private async Task Edit()
+    {
+        try
+        {
+            await theaterRepository.UpdateTheater(theater);
+            navigationManager.NavigateTo("theaters");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
 }

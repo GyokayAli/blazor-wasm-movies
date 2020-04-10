@@ -1,7 +1,67 @@
-﻿@page "/theaters"
+﻿@page  "/theaters"
+@inject ITheaterRepository theaterRepository
 
-<h3>Index Theaters</h3>
+<h3>Theaters</h3>
+
+<AuthorizeView>
+    <Authorized>
+        <div class="form-group">
+            <a class="btn btn-info" href="theater/create">New Theater</a>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+<GenericList List="theaters">
+    <WholeListTemplate>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in theaters)
+                {
+                    <tr>
+                        <td>
+                            <AuthorizeView>
+                                <Authorized>
+                                    <a class="btn btn-success" href="/theater/edit/@item.Id">Edit</a>
+                                    <button class="btn btn-danger" @onclick="@(() => DeleteTheater(item.Id))">Delete</button>
+                                </Authorized>
+                            </AuthorizeView>
+                        </td>
+
+                        <td>@item.Name</td>
+                        <td>@item.Address</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </WholeListTemplate>
+</GenericList>
 
 @code {
 
+    List<Theater> theaters;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            theaters = await theaterRepository.GetTheaters();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task DeleteTheater(int id)
+    {
+        await theaterRepository.DeleteTheater(id);
+        theaters = await theaterRepository.GetTheaters();
+    }
 }

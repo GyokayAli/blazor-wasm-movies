@@ -1,5 +1,26 @@
-﻿<h3>CreateTheater</h3>
+﻿@page "/theater/create"
+@inject ITheaterRepository theaterRepository
+@inject NavigationManager navigationManager
+@attribute [Authorize]
+
+<h3>Create Theater</h3>
+
+<TheaterForm Theater="theater" OnValidSubmit="Create" />
 
 @code {
 
+    private Theater theater = new Theater();
+
+    private async Task Create()
+    {
+        try
+        {
+            await theaterRepository.CreateTheater(theater);
+            navigationManager.NavigateTo("theaters");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
 }
