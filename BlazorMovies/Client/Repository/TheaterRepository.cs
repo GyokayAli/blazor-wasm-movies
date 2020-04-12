@@ -1,4 +1,5 @@
 ﻿using BlazorMovies.Client.Helpers;
+using BlazorMovies.Shared.DTO;
 using BlazorMovies.Shared.Entities;
 using System;
 using System.Collections.Generic;
@@ -21,9 +22,9 @@ namespace BlazorMovies.Client.Repository
             return await _httpService.GetHelper<List<Theater>>(url, false);
         }
 
-        public async Task<Theater> GetTheater(int id)
+        public async Task<TheaterDetailsDTO> GetTheater(int id)
         {
-            return await _httpService.GetHelper<Theater>($"{url}/{id}", false);
+            return await _httpService.GetHelper<TheaterDetailsDTO>($"{url}/{id}", false);
         }
 
         public async Task<List<Theater>> GetTheaterByKeyword(string keyword)

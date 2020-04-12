@@ -1,0 +1,52 @@
+﻿@page "/theater/{TheaterId:int}"
+@inject ITheaterRepository theaterRepository
+
+@if (model == null)
+{
+    <text>Loading...</text>
+}
+else
+{
+    <div>
+        <h2>@model.Theater.Name</h2>
+        <small>Address: @model.Theater.Address</small>
+    </div>
+    @if (model.Movies.Any())
+    {
+        <div style="margin-top: 10px">
+            <h3>Movies</h3>
+            <div style="display: flex; flex-direction: column;">
+                @foreach (var movie in model.Movies)
+                {
+                <div style="margin-bottom: 2px">
+                    <img style="width: 50px;" src="@movie.Poster" />
+                    <span style="display: inline-block; width: 200px;">
+                        <a href="/movie/@movie.Id/@movie.Title.Replace(" ", "-")">@movie.Title</a>
+                    </span>
+                    <span style="display: inline-block; width: 45px;">...</span>
+                    <span>(@movie.ReleaseDate.Value.ToString("yyyy"))</span>
+                </div>
+                }
+            </div>
+        </div>
+    }
+}
+
+@code {
+
+    private TheaterDetailsDTO model;
+
+    [Parameter] public int TheaterId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            model = await theaterRepository.GetTheater(TheaterId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

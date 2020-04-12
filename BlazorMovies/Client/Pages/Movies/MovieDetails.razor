@@ -77,27 +77,27 @@ else
     private MovieDetailsDTO model;
     private RenderFragment<Genre> linkGenre = (genre) =>@<a href="movies/search?genreId=@genre.Id">@genre.Name</a>;
 
-[Parameter] public int MovieId { get; set; }
-[Parameter] public string MovieName { get; set; }
+    [Parameter] public int MovieId { get; set; }
+    [Parameter] public string MovieName { get; set; }
 
-protected override async Task OnInitializedAsync()
-{
-try
-{
-model = await movieRepository.GetMovieDetailsDTO(MovieId);
-}
-catch (Exception ex)
-{
-Console.WriteLine(ex.Message);
-}
-}
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            model = await movieRepository.GetMovieDetailsDTO(MovieId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
 
-private async Task OnVote(int selectedRate)
-{
-model.UserVote = selectedRate;
-var movieRating = new MovieRating() { Rate = selectedRate, MovieId = MovieId };
-await ratingRepository.Vote(movieRating);
+    private async Task OnVote(int selectedRate)
+    {
+        model.UserVote = selectedRate;
+        var movieRating = new MovieRating() { Rate = selectedRate, MovieId = MovieId };
+        await ratingRepository.Vote(movieRating);
 
-await displayMessage.DisplaySuccessMessage("Your vote have been received"!);
-}
+        await displayMessage.DisplaySuccessMessage("Your vote have been received"!);
+    }
 }

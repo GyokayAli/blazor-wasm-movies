@@ -17,7 +17,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        theater = await theaterRepository.GetTheater(TheaterId);
+        TheaterDetailsDTO dto = await theaterRepository.GetTheater(TheaterId);
+        theater = dto.Theater;
     }
 
     private async Task Edit()

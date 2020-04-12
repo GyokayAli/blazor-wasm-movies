@@ -22,20 +22,22 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in theaters)
+                @foreach (var theater in theaters)
                 {
                     <tr>
                         <td>
                             <AuthorizeView>
                                 <Authorized>
-                                    <a class="btn btn-success" href="/theater/edit/@item.Id">Edit</a>
-                                    <button class="btn btn-danger" @onclick="@(() => DeleteTheater(item.Id))">Delete</button>
+                                    <a class="btn btn-success" href="/theater/edit/@theater.Id">Edit</a>
+                                    <button class="btn btn-danger" @onclick="@(() => DeleteTheater(theater.Id))">Delete</button>
                                 </Authorized>
                             </AuthorizeView>
                         </td>
 
-                        <td>@item.Name</td>
-                        <td>@item.Address</td>
+                        <td>
+                            <a href="/theater/@theater.Id">@theater.Name</a>
+                        </td>
+                        <td>@theater.Address</td>
                     </tr>
                 }
             </tbody>
