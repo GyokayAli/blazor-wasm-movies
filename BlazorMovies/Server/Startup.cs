@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSwag;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 
@@ -54,10 +55,23 @@ namespace BlazorMovies.Server
                 // this will make it easier to serialize entities that have circular references
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+
             services.AddResponseCompression(opts =>
             {
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/octet-stream" });
+            });
+
+            services.AddOpenApiDocument(config =>
+            {
+                config.Title = "BlazorMovies API";
+                config.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Type in: Bearer {jour JWT token}"
+                });
             });
         }
 
@@ -79,6 +93,10 @@ namespace BlazorMovies.Server
             app.UseAuthentication();
             app.UseIdentityServer();
             app.UseAuthorization();
+
+            // Register the Swagger generator and the Swagger UI middlewares
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints =>
             {
