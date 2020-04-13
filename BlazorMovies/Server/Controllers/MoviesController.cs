@@ -18,11 +18,16 @@ namespace BlazorMovies.Server.Controllers
     [Authorize(Roles = "Admin")]
     public class MoviesController : ControllerBase
     {
+        #region "Fields"
+
         private readonly ApplicationDbContext _dbContext;
         private readonly IFileStorageService _fileStorageService;
         private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
         private const string ContainerName = "movies";
+        #endregion
+
+        #region "Constructor"
 
         public MoviesController(ApplicationDbContext dbContext, IFileStorageService fileStorageService,
             IMapper mapper, UserManager<IdentityUser> userManager)
@@ -32,12 +37,19 @@ namespace BlazorMovies.Server.Controllers
             _mapper = mapper;
             _userManager = userManager;
         }
+        #endregion
 
+        #region "GET Methods"
+
+        /// <summary>
+        /// Gets the latest 6 Movies in theaters.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IndexPageDTO>> Get()
         {
-            var limit = 6;
+            int limit = 6;
 
             var moviesInTheaters = await _dbContext.Movies
                 .Where(x => x.InTheaters).Take(limit)
@@ -60,6 +72,11 @@ namespace BlazorMovies.Server.Controllers
             return response;
         }
 
+        /// <summary>
+        /// Gets a Movie by Id.
+        /// </summary>
+        /// <param name="id">The Movie Id.</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<MovieDetailsDTO>> Get(int id)
@@ -125,6 +142,43 @@ namespace BlazorMovies.Server.Controllers
             return model;
         }
 
+        /// <summary>
+        /// Gets a Movie by Id for update.
+        /// </summary>
+        /// <param name="id">The Movie Id.</param>
+        /// <returns></returns>
+        [HttpGet("update/{id}")]
+        public async Task<ActionResult<MovieUpdateDTO>> PutGet(int id)
+        {
+            var movieActionResult = await Get(id);
+            if (movieActionResult == null) { return NotFound(); }
+
+            var movieDetailDTO = movieActionResult.Value;
+            var selectedGenreIds = movieDetailDTO.Genres.Select(x => x.Id).ToList();
+            var notSelectedGenres = await _dbContext.Genres
+                .Where(x => !selectedGenreIds.Contains(x.Id))
+                .ToListAsync();
+
+            var model = new MovieUpdateDTO()
+            {
+                Movie = movieDetailDTO.Movie,
+                SelectedGenres = movieDetailDTO.Genres,
+                NotSelectedGenres = notSelectedGenres,
+                Actors = movieDetailDTO.Actors,
+                Theaters = movieDetailDTO.Theaters
+            };
+
+            return model;
+        }
+        #endregion
+
+        #region "POST Methods"
+
+        /// <summary>
+        /// Gets the filtered out result of Movies.
+        /// </summary>
+        /// <param name="filterMoviesDto">The applied filters.</param>
+        /// <returns></returns>
         [HttpPost("filter")]
         [AllowAnonymous]
         public async Task<ActionResult<List<Movie>>> Filter(FilterMoviesDTO filterMoviesDto)
@@ -171,30 +225,11 @@ namespace BlazorMovies.Server.Controllers
             return movies;
         }
 
-        [HttpGet("update/{id}")]
-        public async Task<ActionResult<MovieUpdateDTO>> PutGet(int id)
-        {
-            var movieActionResult = await Get(id);
-            if (movieActionResult == null) { return NotFound(); }
-
-            var movieDetailDTO = movieActionResult.Value;
-            var selectedGenreIds = movieDetailDTO.Genres.Select(x => x.Id).ToList();
-            var notSelectedGenres = await _dbContext.Genres
-                .Where(x => !selectedGenreIds.Contains(x.Id))
-                .ToListAsync();
-
-            var model = new MovieUpdateDTO()
-            {
-                Movie = movieDetailDTO.Movie,
-                SelectedGenres = movieDetailDTO.Genres,
-                NotSelectedGenres = notSelectedGenres,
-                Actors = movieDetailDTO.Actors,
-                Theaters = movieDetailDTO.Theaters
-            };
-
-            return model;
-        }
-
+        /// <summary>
+        /// Creates a new Movie.
+        /// </summary>
+        /// <param name="movie">The Movie to be created.</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<int>> Post(Movie movie)
         {
@@ -216,7 +251,15 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return movie.Id;
         }
+        #endregion
 
+        #region "PUT Methods"
+
+        /// <summary>
+        /// Updates a Movies.
+        /// </summary>
+        /// <param name="movie">The Movie to be updated.</param>
+        /// <returns></returns>
         [HttpPut]
         public async Task<ActionResult> Put(Movie movie)
         {
@@ -249,7 +292,15 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return NoContent();
         }
+        #endregion
 
+        #region "DELETE Methods"
+
+        /// <summary>
+        /// Deletes a Movie.
+        /// </summary>
+        /// <param name="id">The Movie Id.</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -263,5 +314,6 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return NoContent();
         }
+        #endregion
     }
 }

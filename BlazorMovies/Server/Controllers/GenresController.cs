@@ -12,13 +12,25 @@ namespace BlazorMovies.Server.Controllers
     [Authorize(Roles = "Admin")]
     public class GenresController : ControllerBase
     {
+        #region "Fields"
+
         private readonly ApplicationDbContext _dbContext;
+        #endregion
+
+        #region "Constructor"
 
         public GenresController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
+        #endregion
 
+        #region "GET Methods"
+
+        /// <summary>
+        /// Gets all Genres.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<List<Genre>>> Get()
@@ -26,6 +38,11 @@ namespace BlazorMovies.Server.Controllers
             return await _dbContext.Genres.ToListAsync();
         }
 
+        /// <summary>
+        /// Gets a Genre by Id.
+        /// </summary>
+        /// <param name="id">The Genre Id.</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Genre>> Get(int id)
         {
@@ -34,7 +51,15 @@ namespace BlazorMovies.Server.Controllers
             if (genre == null) { return NotFound(); }
             return genre;
         }
+        #endregion
 
+        #region "POST Methods"
+
+        /// <summary>
+        /// Creates a new Genre
+        /// </summary>
+        /// <param name="genre">The Genre to be created.</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<int>> Post(Genre genre)
         {
@@ -42,7 +67,15 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return genre.Id;
         }
+        #endregion
 
+        #region "PUT Methods"
+
+        /// <summary>
+        /// Updates a Genre.
+        /// </summary>
+        /// <param name="genre">The Genre to be updated.</param>
+        /// <returns></returns>
         [HttpPut]
         public async Task<ActionResult> Put(Genre genre)
         {
@@ -50,7 +83,16 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return NoContent();
         }
+        #endregion
 
+        #region "DELETE Methods"
+
+
+        /// <summary>
+        /// Delete a Genre.
+        /// </summary>
+        /// <param name="id">The Genre Id.</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -64,5 +106,6 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return NoContent();
         }
+        #endregion
     }
 }

@@ -13,15 +13,28 @@ namespace BlazorMovies.Server.Controllers
     [Authorize]
     public class RatingController : ControllerBase
     {
+        #region "Fields"
+
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<IdentityUser> _userManager;
+        #endregion
+
+        #region "Constructor"
 
         public RatingController(ApplicationDbContext dbContext, UserManager<IdentityUser> userManager)
         {
             _dbContext = dbContext;
             _userManager = userManager;
         }
+        #endregion
 
+        #region "POST Methods"
+
+        /// <summary>
+        /// Upserts the rating of a movie.
+        /// </summary>
+        /// <param name="movieRating"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> Rate(MovieRating movieRating)
         {
@@ -46,5 +59,6 @@ namespace BlazorMovies.Server.Controllers
 
             return NoContent();
         }
+        #endregion
     }
 }

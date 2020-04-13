@@ -17,9 +17,14 @@ namespace BlazorMovies.Server.Controllers
     [Authorize(Roles = "Admin")]
     public class PeopleController : ControllerBase
     {
+        #region "Fields"
+
         private readonly ApplicationDbContext _dbContext;
         private readonly IFileStorageService _fileStorageService;
         private readonly IMapper _mapper;
+        #endregion
+
+        #region "Constructor"
 
         public PeopleController(ApplicationDbContext dbContext, IFileStorageService fileStorageService, IMapper mapper)
         {
@@ -27,7 +32,14 @@ namespace BlazorMovies.Server.Controllers
             _fileStorageService = fileStorageService;
             _mapper = mapper;
         }
+        #endregion
 
+        #region "GET Methods"
+        /// <summary>
+        /// Gets a paginated result of People.
+        /// </summary>
+        /// <param name="pagination">The pagination options.</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<List<Person>>> Get([FromQuery] PaginationDTO pagination)
         {
@@ -37,6 +49,11 @@ namespace BlazorMovies.Server.Controllers
             return await queryable.Paginate(pagination).ToListAsync();
         }
 
+        /// <summary>
+        /// Gets a Person by Id to edit.
+        /// </summary>
+        /// <param name="id">The Person Id.</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Person>> Get(int id)
         {
@@ -46,6 +63,11 @@ namespace BlazorMovies.Server.Controllers
             return person;
         }
 
+        /// <summary>
+        /// Gets a Person by Id to display.
+        /// </summary>
+        /// <param name="id">The Person Id.</param>
+        /// <returns></returns>
         [HttpGet("view/{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<PersonDetailsDTO>> GetDisplay(int id)
@@ -81,6 +103,11 @@ namespace BlazorMovies.Server.Controllers
             return model;
         }
 
+        /// <summary>
+        /// Gets the result of People matching the search text.
+        /// </summary>
+        /// <param name="searchText">The search text.</param>
+        /// <returns></returns>
         [HttpGet("search/{searchText}")]
         public async Task<ActionResult<List<Person>>> GetByName(string searchText)
         {
@@ -90,7 +117,15 @@ namespace BlazorMovies.Server.Controllers
                 .Take(5)
                 .ToListAsync();
         }
+        #endregion
 
+        #region "POST Methods"
+
+        /// <summary>
+        /// Creates a new Person.
+        /// </summary>
+        /// <param name="person">The Person to be created.</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<int>> Post(Person person)
         {
@@ -104,7 +139,15 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return person.Id;
         }
+        #endregion
 
+        #region "PUT Methods"
+
+        /// <summary>
+        /// Updates a Person.
+        /// </summary>
+        /// <param name="person">The Person to be updated.</param>
+        /// <returns></returns>
         [HttpPut]
         public async Task<ActionResult> Put(Person person)
         {
@@ -123,7 +166,15 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return NoContent();
         }
+        #endregion
 
+        #region "DELETE Methods"
+
+        /// <summary>
+        /// Deletes a Person.
+        /// </summary>
+        /// <param name="id">The Person Id.</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -137,5 +188,6 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return NoContent();
         }
+        #endregion
     }
 }

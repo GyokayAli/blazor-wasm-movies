@@ -14,13 +14,25 @@ namespace BlazorMovies.Server.Controllers
     [Authorize(Roles = "Admin")]
     public class TheatersController : ControllerBase
     {
+        #region "Fields"
+
         private readonly ApplicationDbContext _dbContext;
+        #endregion
+
+        #region "Constructor"
 
         public TheatersController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
+        #endregion
 
+        #region "GET Methods"
+
+        /// <summary>
+        /// Gets all Theaters.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<List<Theater>>> Get()
@@ -28,6 +40,11 @@ namespace BlazorMovies.Server.Controllers
             return await _dbContext.Theaters.ToListAsync();
         }
 
+        /// <summary>
+        /// Gets a Theater by Id.
+        /// </summary>
+        /// <param name="id">The Theater Id.</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<TheaterDetailsDTO>> Get(int id)
@@ -55,6 +72,11 @@ namespace BlazorMovies.Server.Controllers
             return model;
         }
 
+        /// <summary>
+        /// Gets a result of Theaters by search keyword.
+        /// </summary>
+        /// <param name="keyword">The search keyword.</param>
+        /// <returns></returns>
         [HttpGet("search/{keyword}")]
         public async Task<ActionResult<List<Theater>>> GetByKeyword(string keyword)
         {
@@ -64,7 +86,15 @@ namespace BlazorMovies.Server.Controllers
                 .Take(5)
                 .ToListAsync();
         }
+        #endregion
 
+        #region "POST Methods"
+
+        /// <summary>
+        /// Creates a new Theater.
+        /// </summary>
+        /// <param name="theater">The Theater to be created.</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<int>> Post(Theater theater)
         {
@@ -72,7 +102,15 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return theater.Id;
         }
+        #endregion
 
+        #region "PUT Methods"
+
+        /// <summary>
+        /// Updates a Theater.
+        /// </summary>
+        /// <param name="theater">The Theater to be updated.</param>
+        /// <returns></returns>
         [HttpPut]
         public async Task<ActionResult> Put(Theater theater)
         {
@@ -80,7 +118,15 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return NoContent();
         }
+        #endregion
 
+        #region "DELETE Methods"
+
+        /// <summary>
+        /// Deletes a Theater.
+        /// </summary>
+        /// <param name="id">The Theater Id.</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -94,5 +140,6 @@ namespace BlazorMovies.Server.Controllers
             await _dbContext.SaveChangesAsync();
             return NoContent();
         }
+        #endregion
     }
 }

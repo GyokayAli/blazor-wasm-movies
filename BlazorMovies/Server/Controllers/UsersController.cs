@@ -17,15 +17,28 @@ namespace BlazorMovies.Server.Controllers
     [Authorize(Roles = "Admin")]
     public class UsersController : ControllerBase
     {
+        #region "Fields"
+
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<IdentityUser> _userManager;
+        #endregion
+
+        #region "Constructor"
 
         public UsersController(ApplicationDbContext dbContext, UserManager<IdentityUser> userManager)
         {
             _dbContext = dbContext;
             _userManager = userManager;
         }
+        #endregion
 
+        #region "GET Methods"
+
+        /// <summary>
+        /// Gets a paginated result of Users.
+        /// </summary>
+        /// <param name="pagination">The pagination options.</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<List<UserDTO>>> Get([FromQuery] PaginationDTO pagination)
         {
@@ -36,13 +49,25 @@ namespace BlazorMovies.Server.Controllers
                 .Select(x => new UserDTO { Email = x.Email, UserId = x.Id }).ToListAsync();
         }
 
+        /// <summary>
+        /// Gets all user roles.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("roles")]
         public async Task<ActionResult<List<RoleDTO>>> Get()
         {
             return await _dbContext.Roles
                 .Select(x => new RoleDTO { RoleName = x.Name }).ToListAsync();
         }
+        #endregion
 
+        #region "POST Methods"
+
+        /// <summary>
+        /// Assigns a role to User.
+        /// </summary>
+        /// <param name="editRoleDto">The edit role settings.</param>
+        /// <returns></returns>
         [HttpPost("assignRole")]
         public async Task<ActionResult> AssignRole(EditRoleDTO editRoleDto)
         {
@@ -51,6 +76,11 @@ namespace BlazorMovies.Server.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Removes a role for User.
+        /// </summary>
+        /// <param name="editRoleDto">The edit role settings.</param>
+        /// <returns></returns>
         [HttpPost("removeRole")]
         public async Task<ActionResult> RemoveRole(EditRoleDTO editRoleDto)
         {
@@ -58,5 +88,6 @@ namespace BlazorMovies.Server.Controllers
             await _userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, editRoleDto.RoleName));
             return NoContent();
         }
+        #endregion
     }
 }
