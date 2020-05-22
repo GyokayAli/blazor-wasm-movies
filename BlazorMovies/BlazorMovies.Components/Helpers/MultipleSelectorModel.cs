@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorMovies.Client.Helpers
+namespace BlazorMovies.Components.Helpers
 {
     public struct MultipleSelectorModel
     {

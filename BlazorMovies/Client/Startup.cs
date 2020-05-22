@@ -1,6 +1,8 @@
 using Blazor.FileReader;
 using BlazorMovies.Client.Helpers;
 using BlazorMovies.Client.Repository;
+using BlazorMovies.Components.Helpers;
+using BlazorMovies.Shared.Repositories;
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

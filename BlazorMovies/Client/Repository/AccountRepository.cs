@@ -1,5 +1,6 @@
 ﻿using BlazorMovies.Client.Helpers;
 using BlazorMovies.Shared.DTO;
+using BlazorMovies.Shared.Repositories;
 using System;
 using System.Threading.Tasks;
 

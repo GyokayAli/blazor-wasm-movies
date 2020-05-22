@@ -1,7 +1,7 @@
 ﻿using BlazorMovies.Shared.Entities;
 using System.Threading.Tasks;
 
-namespace BlazorMovies.Client.Repository
+namespace BlazorMovies.Shared.Repositories
 {
     public interface IRatingRepository
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.JSInterop;
 using System.Threading.Tasks;
 
-namespace BlazorMovies.Client.Helpers
+namespace BlazorMovies.Components.Helpers
 {
     public class DisplayMessage : IDisplayMessage
     {

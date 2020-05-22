@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BlazorMovies.Client.Repository
+namespace BlazorMovies.Shared.Repositories
 {
     public interface IUserRepository
     {

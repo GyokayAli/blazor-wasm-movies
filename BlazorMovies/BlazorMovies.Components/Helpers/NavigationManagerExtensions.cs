@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BlazorMovies.Client.Helpers
+namespace BlazorMovies.Components.Helpers
 {
     public static class NavigationManagerExtensions
     {

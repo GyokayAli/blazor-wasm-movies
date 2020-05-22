@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace BlazorMovies.Client.Helpers
+namespace BlazorMovies.Components.Helpers
 {
     public interface IDisplayMessage
     {
